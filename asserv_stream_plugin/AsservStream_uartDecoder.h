@@ -11,29 +11,6 @@ typedef struct
 	float value2;
 	float value3;
 	float value4;
-	float value5;
-	float value6;
-	float value7;
-	float value8;
-	float value9;
-	float value10;
-	float value11;
-	float value12;
-	float value13;
-	float value14;
-	float value15;
-	float value16;
-	float value17;
-	float value18;
-	float value19;
-	float value20;
-	float value21;
-	float value22;
-	float value23;
-	float value24;
-	float value25;
-	float value26;
-	float value27;
 }  __attribute__((packed)) UsbStreamSample;
 
 
