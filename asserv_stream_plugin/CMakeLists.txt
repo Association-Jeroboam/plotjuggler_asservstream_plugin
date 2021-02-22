@@ -16,7 +16,8 @@ find_package(Qt5 REQUIRED COMPONENTS
     Concurrent
     Xml
     Svg
-    WebSockets)
+    WebSockets
+    SerialPort)
 
 set( QT_LINK_LIBRARIES
     Qt5::Core
@@ -24,7 +25,8 @@ set( QT_LINK_LIBRARIES
     Qt5::Concurrent
     Qt5::Xml
     Qt5::Svg
-    Qt5::WebSockets)
+    Qt5::WebSockets
+    Qt5::SerialPort)
     
 include_directories(
     3rdparty
@@ -34,6 +36,7 @@ include_directories(
     ${Qt5Xml_INCLUDE_DIRS}
     ${Qt5WebSockets_INCLUDE_DIRS}
     ${Qt5Svg_INCLUDE_DIRS}
+    ${Qt5SerialPort_INCLUDE_DIRS}
     ./
     ../PlotJuggler/include
      ../PlotJuggler/common
@@ -55,7 +58,7 @@ SET( SRC
     
     
 add_library(AsservStream SHARED ${SRC} ${UI_SRC} )
-target_link_libraries(AsservStream  ${Qt5Widgets_LIBRARIES} ${Qt5Xml_LIBRARIES})
+target_link_libraries(AsservStream  ${Qt5Widgets_LIBRARIES} ${Qt5Xml_LIBRARIES} ${Qt5SerialPort_LIBRARIES})
 target_compile_definitions(AsservStream PRIVATE PLUGIN_NAME="Esial Robotik asserv stream")
 
 if(COMPILING_WITH_CATKIN)

@@ -6,6 +6,7 @@
 #include "PlotJuggler/datastreamer_base.h"
 #include <map>
 #include <QStringList>
+#include <QtSerialPort/QSerialPort>
 #include <cstring>
 #include <fstream>
 #include "AsservStream_uartDecoder.h"
@@ -51,6 +52,8 @@ private:
      int fdLog;
      AsservStream_uartDecoder uartDecoder;
      AsservStreamControlPanel *controlPanelWindows;
+     QSerialPort * device;
+     bool deviceOpened;
 };
 
 #endif // ASSERVSTREAM_H

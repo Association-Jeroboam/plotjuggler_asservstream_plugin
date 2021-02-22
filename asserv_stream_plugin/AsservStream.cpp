@@ -17,10 +17,11 @@
 #include "AsservStreamControlPanel.h"
 
 #define ASSERV_FREQ 300.0
+#define BAUDRATE    QSerialPort::Baud115200
 using namespace PJ;
 
 
-AsservStream::AsservStream():_running(false),fd(-1), fdLog(-1)
+AsservStream::AsservStream():_running(false),fd(-1), fdLog(-1), deviceOpened(false)
 {
     QStringList  words_list;
     words_list
@@ -82,24 +83,27 @@ bool AsservStream::openPort()
     for (int i = list.size() - 1; i >= 0; i--)
         ttyListAbsolutePath << list.at(i).absoluteFilePath();
 
-    QString device = QInputDialog::getItem(nullptr, tr("Which tty use ?"), tr("/dev/tty?"), ttyListAbsolutePath, 0, false, &ok);
-
-    std::string ttyName = device.toStdString();
+    QString portName = QInputDialog::getItem(nullptr, tr("Which tty use ?"), tr("/dev/tty?"), ttyListAbsolutePath, 0, false, &ok);
 
     if (!ok)
         return false;
+    device = new QSerialPort(this);
+    device->setPortName(portName);
+    deviceOpened = device->open(QIODevice::ReadWrite);
 
-    fd = open(ttyName.c_str(), O_RDWR | O_NOCTTY);
-    if (fd == -1)
-    {
-        printf("Unable to open %s\n", ttyName.c_str());
-        return false;
-    }
-    else
-    {
-        printf("Port %s opened\n", ttyName.c_str());
-        fdLog = open("commandLog" , O_WRONLY | O_APPEND | O_CREAT, S_IRUSR |S_IWUSR | S_IRGRP|S_IWGRP );
+    if(deviceOpened){
+        device->setBaudRate(BAUDRATE);
+        device->setDataBits(QSerialPort::Data8);
+        device->setParity(QSerialPort::NoParity);
+        device->setStopBits(QSerialPort::OneStop);
+        device->setFlowControl(QSerialPort::NoFlowControl);
+        device->flush();
+        printf("opened port %s\n", portName.toStdString().c_str());
         return true;
+
+    } else{
+        printf("Unable to open %s\n", portName.toStdString().c_str());
+        return false;
     }
 
 }
@@ -130,13 +134,14 @@ bool AsservStream::start(QStringList*)
         for (auto &it : dataMap().numeric)
         {
             auto &plot = it.second;
+
             plot.pushBack(PlotData::Point(0, 0));
         }
         _running = true;
         _thread = std::thread([this]()
         {   this->loop();});
 
-        controlPanelWindows = new AsservStreamControlPanel(new Ui_AsservStreamControlPanel, &uartDecoder, fd, fdLog);
+        controlPanelWindows = new AsservStreamControlPanel(new Ui_AsservStreamControlPanel, &uartDecoder, device, fdLog);
         controlPanelWindows->show();
 
         return true;
@@ -154,13 +159,11 @@ void AsservStream::shutdown()
     if(controlPanelWindows != nullptr)
     	controlPanelWindows->close();
 
-    if(fd != -1)
-     close(fd);
-
-    if( fdLog != -1)
-        close(fdLog);
-
-    if( _thread.joinable()) _thread.join();
+    if( _thread.joinable()){
+        _thread.join();
+    }
+    device->clearError();
+    device->close();
 }
 
 bool AsservStream::isRunning() const { return _running; }
@@ -197,17 +200,18 @@ void AsservStream::pushSingleCycle()
 void AsservStream::loop()
 {
     _running = true;
-    while (_running && fd != -1)
+    while (_running && deviceOpened)
     {
         uint8_t read_buffer[sizeof(UsbStreamSample) + 4];
         int bytes_read = 0;
-        bytes_read = read(fd, read_buffer, sizeof(read_buffer));
 
-        if (bytes_read < 1)
-        {
-            emit closed();
-            break;
+        while (device->bytesAvailable() < sizeof(UsbStreamSample) + 4){
+            if (!device->waitForReadyRead(100)){
+                emit closed();
+            }
         }
+
+        bytes_read = device->read((char*)read_buffer, sizeof(UsbStreamSample) + 4);
 
         if (bytes_read > 0)
             uartDecoder.processBytes(read_buffer, bytes_read);

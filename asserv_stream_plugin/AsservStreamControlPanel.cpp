@@ -2,8 +2,8 @@
 
 #include <unistd.h>  /* UNIX Standard Definitions      */
 
-AsservStreamControlPanel::AsservStreamControlPanel(Ui_AsservStreamControlPanel *ui, AsservStream_uartDecoder *uartDecoder, int uartFd, int logFd ):
-QMainWindow(),ui_(ui), uartFd_(uartFd), logFd_(logFd), uartDecoder(uartDecoder)
+AsservStreamControlPanel::AsservStreamControlPanel(Ui_AsservStreamControlPanel *ui, AsservStream_uartDecoder *uartDecoder, QSerialPort * device, int logFd ):
+QMainWindow(),ui_(ui), m_device(device), logFd_(logFd), uartDecoder(uartDecoder)
 {
 	ui->setupUi(this);
 	connect(ui_->vitesse_gauche_range, SIGNAL(valueChanged(int)),
@@ -46,7 +46,7 @@ void AsservStreamControlPanel::send(char *buffer, size_t length)
 {
 	printf("Sending: \"%s\" \n",buffer);
 
-	ssize_t size = write(uartFd_, buffer, length);
+	ssize_t size = m_device->write(buffer, length);
 	if(size != length)
 		printf("Error: Unable to send command\n");
 
