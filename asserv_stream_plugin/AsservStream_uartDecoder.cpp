@@ -20,7 +20,7 @@ void AsservStream_uartDecoder::processBytes(uint8_t *buffer, unsigned int nbByte
 
 void AsservStream_uartDecoder::synchroLookUp(uint8_t byte)
 {
-	constexpr uint32_t synchroWord = 0xCAFED00D;
+	constexpr uint32_t synchroWord = 0xDEADBEEF;
 	static int nbSynchroByteFound = 0;
 
 	constexpr uint32_t synchroWord_config = 0xCAFEDECA;

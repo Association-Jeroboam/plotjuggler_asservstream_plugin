@@ -26,41 +26,12 @@ AsservStream::AsservStream():_running(false),fd(-1), fdLog(-1)
     words_list
         << "timestamp"
 
-        <<"speed/right/goal"
-        <<"speed/left/goal"
+        <<"speed/right/setpoint"
+        <<"speed/left/setpoint"
         <<"speed/right/current"
         <<"speed/left/current"
-        <<"speed/right/error"
         <<"speed/left/error"
-        <<"speed/right/outputConsign"
-        <<"speed/left/outputConsign"
-        <<"speed/right/output_consign_integrated"
-        <<"speed/left/output_consign_integrated"
-        <<"speed/right/Kp"
-        <<"speed/left/Kp"
-        <<"speed/right/Ki"
-        <<"speed/left/Ki"
-
-
-        << "angle_regulator/goal"
-        << "angle_regulator/accumulator"
-        << "angle_regulator/output"
-        << "angle_regulator/limited_output"
-
-        << "distance_regulator/goal"
-        << "distance_regulator/accumulator"
-        << "distance_regulator/output"
-        << "distance_regulator/limited_output"
-
-        << "raw_encoder/right"
-        << "raw_encoder/left"
-
-        << "odometry/X"
-        << "odometry/Y"
-        << "odometry/theta"
-
-        << "commandManager/X"
-        << "commandManager/Y"
+        <<"speed/right/error"
         ;
 
    std::lock_guard<std::mutex> lock( mutex() );
@@ -222,78 +193,14 @@ double AsservStream::getValueFromName(const  std::string &name, UsbStreamSample 
 {
     double value = 0;
 
-    if (name == "timestamp")
-        value = sample.timestamp;
-    else if (name == "speed/right/goal")
-        value = sample.value1;
-    else if (name == "speed/left/goal")
-        value = sample.value4;
+    if (name == "timestamp") value = sample.timestamp;
+	else if (name == "speed/left/current")   value = sample.value1;
+    else if (name == "speed/left/setpoint")  value = sample.value2;
+	else if(name == "speed/left/error")      value = sample.value3;
+    else if (name == "speed/right/current")  value = sample.value4;
+	else if (name == "speed/right/setpoint") value = sample.value5;
+	else if (name == "speed/right/error")    value = sample.value6;
 
-    else if (name == "speed/right/current")
-        value = sample.value2;
-    else if (name == "speed/left/current")
-        value = sample.value5;
-
-    else if (name == "speed/right/error")
-        value = sample.value1-sample.value2;
-    else if (name == "speed/left/error")
-        value = sample.value4-sample.value5;
-
-    else if (name == "speed/right/outputConsign")
-        value = sample.value3;
-    else if (name == "speed/left/outputConsign")
-        value = sample.value6;
-
-    else if (name == "speed/right/Kp")
-        value = sample.value24;
-    else if (name == "speed/left/Kp")
-        value = sample.value26;
-
-    else if (name == "speed/right/Ki")
-        value = sample.value25;
-    else if (name == "speed/left/Ki")
-        value = sample.value27;
-
-    else if (name == "speed/right/output_consign_integrated")
-        value = sample.value7;
-    else if (name == "speed/left/output_consign_integrated")
-        value = sample.value8;
-
-    else if (name == "angle_regulator/limited_output")
-        value = sample.value9;
-    else if (name == "distance_regulator/limited_output")
-        value = sample.value10;
-
-    else if (name == "angle_regulator/goal")
-        value = sample.value11;
-    else if (name == "angle_regulator/accumulator")
-        value = sample.value12;
-    else if (name == "angle_regulator/output")
-        value = sample.value13;
-
-    else if (name == "distance_regulator/goal")
-        value = sample.value14;
-    else if (name == "distance_regulator/accumulator")
-        value = sample.value15;
-    else if (name == "distance_regulator/output")
-        value = sample.value16;
-
-    else if (name == "raw_encoder/right")
-        value = sample.value17;
-    else if (name == "raw_encoder/left")
-        value = sample.value18;
-
-    else if (name == "odometry/X")
-        value = sample.value19;
-    else if (name == "odometry/Y")
-        value = sample.value20;
-    else if (name == "odometry/theta")
-        value = sample.value21;
-
-    else if (name == "commandManager/X")
-        value = sample.value22;
-    else if (name == "commandManager/Y")
-        value = sample.value23;
 
     return value;
 }
