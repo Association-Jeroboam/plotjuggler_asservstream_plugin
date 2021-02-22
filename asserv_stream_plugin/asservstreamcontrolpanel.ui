@@ -1014,7 +1014,7 @@ QGroupBox::title {
      <property name="geometry">
       <rect>
        <x>530</x>
-       <y>80</y>
+       <y>70</y>
        <width>181</width>
        <height>27</height>
       </rect>
@@ -1033,7 +1033,7 @@ QGroupBox::title {
       </rect>
      </property>
      <property name="decimals">
-      <number>0</number>
+      <number>3</number>
      </property>
      <property name="minimum">
       <double>-3000.000000000000000</double>
@@ -1042,7 +1042,7 @@ QGroupBox::title {
       <double>3000.000000000000000</double>
      </property>
      <property name="singleStep">
-      <double>10.000000000000000</double>
+      <double>0.100000000000000</double>
      </property>
     </widget>
     <widget class="QLabel" name="label_14">
@@ -1094,7 +1094,7 @@ QGroupBox::title {
       </rect>
      </property>
      <property name="decimals">
-      <number>0</number>
+      <number>3</number>
      </property>
      <property name="minimum">
       <double>-3000.000000000000000</double>
@@ -1103,7 +1103,7 @@ QGroupBox::title {
       <double>3000.000000000000000</double>
      </property>
      <property name="singleStep">
-      <double>10.000000000000000</double>
+      <double>0.100000000000000</double>
      </property>
     </widget>
     <widget class="QLabel" name="label_16">
@@ -1123,7 +1123,7 @@ QGroupBox::title {
      <property name="geometry">
       <rect>
        <x>530</x>
-       <y>30</y>
+       <y>10</y>
        <width>181</width>
        <height>27</height>
       </rect>
@@ -1355,6 +1355,32 @@ QGroupBox::title {
      </property>
      <property name="text">
       <string>Send GOTO command</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="right_wheel_speed_reset_btn">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>40</y>
+       <width>181</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Reset wheel speed</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="left_wheel_speed_reset_btn">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>100</y>
+       <width>181</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Reset wheel speed</string>
      </property>
     </widget>
    </widget>
