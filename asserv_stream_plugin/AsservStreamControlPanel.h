@@ -43,6 +43,8 @@ public slots:
     void on_robot_speed_ang_cmd_btn_clicked();
     void on_left_whell_speed_cmd_btn_clicked();
     void on_right_whell_speed_cmd_btn_clicked();
+    void on_left_wheel_speed_reset_btn_clicked();
+    void on_right_wheel_speed_reset_btn_clicked();
 
     void on_pos_cmd_btn_clicked();
     void on_angle_cmd_btn_clicked();

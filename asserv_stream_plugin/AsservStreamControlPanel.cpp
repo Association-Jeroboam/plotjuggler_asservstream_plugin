@@ -61,7 +61,7 @@ void AsservStreamControlPanel::send(char *buffer, size_t length)
 
 void AsservStreamControlPanel::on_reset_btn_clicked()
 {
-    char buffer[] = "asserv reset";
+    char buffer[] = "control reset\r\n";
     int len = sizeof(buffer);
     send(buffer, len);
 }
@@ -97,32 +97,34 @@ void AsservStreamControlPanel::on_distAngle_disable_btn_clicked()
 void AsservStreamControlPanel::on_vitesse_gauche_update_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "asserv speedcontrol l %s %s",
+	int len = sprintf(buffer, "motor left pid %s %s %s\r\n",
                       ui_->vitesse_gauche_Kp->text().toStdString().c_str(),
-                      ui_->vitesse_gauche_Ki->text().toStdString().c_str() );
+                      ui_->vitesse_gauche_Ki->text().toStdString().c_str(),
+                      ui_->vitesse_gauche_Kd->text().toStdString().c_str() );
     send(buffer, len);
 }
 
 void AsservStreamControlPanel::on_vitesse_droite_update_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "asserv speedcontrol r %s %s",
+	int len = sprintf(buffer, "motor right pid %s %s %s\r\n",
                       ui_->vitesse_droite_Kp->text().toStdString().c_str(),
-                      ui_->vitesse_droite_Ki->text().toStdString().c_str() );
+                      ui_->vitesse_droite_Ki->text().toStdString().c_str(),
+                      ui_->vitesse_gauche_Kd->text().toStdString().c_str() );
     send(buffer, len);
 }
 
 void AsservStreamControlPanel::on_distance_update_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "asserv distcontrol %s",
+    int len = sprintf(buffer, "control distance %s\r\n",
                       ui_->distance_Kp->text().toStdString().c_str() );
     send(buffer, len);
 }
 void AsservStreamControlPanel::on_angle_update_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "asserv anglecontrol %s",
+    int len = sprintf(buffer, "control angle %s\r\n",
                       ui_->angle_Kp->text().toStdString().c_str() );
     send(buffer, len);
 }
@@ -166,17 +168,29 @@ void AsservStreamControlPanel::on_robot_speed_ang_cmd_btn_clicked()
 void AsservStreamControlPanel::on_left_whell_speed_cmd_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "asserv wheelspeedstep l %s %s", ui_->left_wheel_speed_cmd->text().toStdString().c_str(),
-            ui_->speed_consign_duration->text().toStdString().c_str());
+    int len = sprintf(buffer, "motor left speed %s\r\n", ui_->left_wheel_speed_cmd->text().toStdString().c_str() );
     send(buffer, len);
 }
 
 void AsservStreamControlPanel::on_right_whell_speed_cmd_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "asserv wheelspeedstep r %s %s", ui_->right_wheel_speed_cmd->text().toStdString().c_str(),
-            ui_->speed_consign_duration->text().toStdString().c_str());
+    int len = sprintf(buffer, "motor right speed %s\r\n", ui_->right_wheel_speed_cmd->text().toStdString().c_str() );
     send(buffer, len);
+}
+
+void AsservStreamControlPanel::on_left_wheel_speed_reset_btn_clicked()
+{
+	char buffer[128];
+	int len = sprintf(buffer, "motor left speed 0\r\n");
+	send(buffer, len);
+}
+
+void AsservStreamControlPanel::on_right_wheel_speed_reset_btn_clicked()
+{
+	char buffer[128];
+	int len = sprintf(buffer, "motor right speed 0\r\n");
+	send(buffer, len);
 }
 
 void AsservStreamControlPanel::on_pos_cmd_btn_clicked()
