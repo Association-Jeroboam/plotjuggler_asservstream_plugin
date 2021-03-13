@@ -33,6 +33,27 @@ AsservStream::AsservStream():_running(false),fd(-1), fdLog(-1), deviceOpened(fal
         <<"speed/left/current"
         <<"speed/right/error"
         <<"speed/left/error"
+
+        <<"speed/angular/setpoint"
+        <<"speed/angular/current"
+        <<"speed/angular/error"
+
+        <<"speed/linear/setpoint"
+        <<"speed/linear/current"
+        <<"speed/linear/error"
+
+        <<"angle/setpoint"
+        <<"angle/modulo"
+        <<"angle/absolute"
+        <<"angle/error"
+
+        <<"distance/error"
+
+        <<"position/x"
+        <<"position/y"
+
+        <<"PWM/left"
+        <<"PWM/right"
         ;
 
    std::lock_guard<std::mutex> lock( mutex() );
@@ -179,7 +200,7 @@ void AsservStream::loop()
         int bytes_read = 0;
 
         while (device->bytesAvailable() < sizeof(UsbStreamSample) + 4){
-            if (!device->waitForReadyRead(100)){
+            if (!device->waitForReadyRead(500)){
                 emit closed();
             }
         }
@@ -213,7 +234,36 @@ double AsservStream::getValueFromName(const  std::string &name, UsbStreamSample 
         value = sample.value2 - sample.value1;
     else if (name == "speed/right/error")
         value = sample.value4 - sample.value3;
-
+    else if ( name == "speed/angular/setpoint")
+        value = sample.value6;
+    else if ( name == "speed/angular/current")
+        value = sample.value5;
+    else if ( name == "speed/angular/error")
+        value = sample.value6 - sample.value5;
+    else if ( name == "speed/linear/setpoint")
+        value = sample.value8;
+    else if ( name == "speed/linear/current")
+        value = sample.value7;
+    else if ( name == "speed/linear/error")
+        value = sample.value8 - sample.value7;
+    else if ( name == "angle/setpoint")
+        value = sample.value11;
+    else if ( name == "angle/modulo")
+        value = sample.value9 ;
+    else if ( name == "angle/absolute")
+        value = sample.value10;
+    else if ( name == "angle/error")
+        value = sample.value11 - sample.value10;
+    else if ( name == "distance/error")
+        value = sample.value12;
+    else if ( name == "position/x")
+        value = sample.value13;
+    else if ( name == "position/y")
+        value = sample.value14;
+    else if ( name == "PWM/left")
+        value = sample.value15;
+    else if ( name == "PWM/right")
+        value = sample.value16;
     return value;
 }
 

@@ -117,14 +117,14 @@ void AsservStreamControlPanel::on_vitesse_droite_update_btn_clicked()
 void AsservStreamControlPanel::on_distance_update_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "control distance %s\r\n",
+    int len = sprintf(buffer, "control distance_pid %s\r\n",
                       ui_->distance_Kp->text().toStdString().c_str() );
     send(buffer, len);
 }
 void AsservStreamControlPanel::on_angle_update_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "control angle %s\r\n",
+    int len = sprintf(buffer, "control angle_pid %s\r\n",
                       ui_->angle_Kp->text().toStdString().c_str() );
     send(buffer, len);
 }
@@ -152,16 +152,16 @@ void AsservStreamControlPanel::on_distance_acc_update_btn_clicked()
 void AsservStreamControlPanel::on_robot_speed_lin_cmd_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "asserv robotfwspeedstep %s %s", ui_->robot_speed_lin_cmd->text().toStdString().c_str(),
-            ui_->speed_consign_duration->text().toStdString().c_str());
+    int len = sprintf(buffer, "control circular %s %s\r\n", ui_->robot_speed_ang_cmd->text().toStdString().c_str(),
+                      ui_->robot_speed_lin_cmd->text().toStdString().c_str());
     send(buffer, len);
 }
 
 void AsservStreamControlPanel::on_robot_speed_ang_cmd_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "asserv robotangspeedstep %s %s", ui_->robot_speed_ang_cmd->text().toStdString().c_str(),
-            ui_->speed_consign_duration->text().toStdString().c_str());
+    int len = sprintf(buffer, "control circular %s %s\r\n", ui_->robot_speed_ang_cmd->text().toStdString().c_str(),
+                      ui_->robot_speed_lin_cmd->text().toStdString().c_str());
     send(buffer, len);
 }
 
@@ -196,21 +196,21 @@ void AsservStreamControlPanel::on_right_wheel_speed_reset_btn_clicked()
 void AsservStreamControlPanel::on_pos_cmd_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "asserv adddist %s", ui_->pos_cmd->text().toStdString().c_str());
+    int len = sprintf(buffer, "control distance %s\r\n", ui_->pos_cmd->text().toStdString().c_str());
     send(buffer, len);
 }
 
 void AsservStreamControlPanel::on_angle_cmd_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "asserv addangle %s", ui_->angle_cmd->text().toStdString().c_str());
+    int len = sprintf(buffer, "control angle %s\r\n", ui_->angle_cmd->text().toStdString().c_str());
     send(buffer, len);
 }
 
 void AsservStreamControlPanel::on_goto_cmd_btn_clicked()
 {
     char buffer[128];
-    int len = sprintf(buffer, "asserv addgoto %s %s", ui_->goto_X->text().toStdString().c_str(), ui_->goto_Y->text().toStdString().c_str());
+    int len = sprintf(buffer, "control goto %s %s\r\n", ui_->goto_X->text().toStdString().c_str(), ui_->goto_Y->text().toStdString().c_str());
     send(buffer, len);
 }
 
